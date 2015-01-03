@@ -8,7 +8,5 @@ SECTIONS {
   .data   : { *(.data) }
   .bss    : { *(.bss) }
 
-  . = . + 0x10000;
-
-  sp_top = .;
+  stack_limit = .;
 }
