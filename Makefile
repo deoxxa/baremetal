@@ -1,17 +1,27 @@
 ARCH = arm-none-eabi
 
-CC = ${ARCH}-gcc
-OBJCOPY = ${ARCH}-objcopy
+CC = $(ARCH)-gcc
+OBJCOPY = $(ARCH)-objcopy
+OBJDUMP = $(ARCH)-objdump
 
-CFLAGS += -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s -nostartfiles
+CFLAGS += -march=armv6zk -mtune=arm1176jzf-s -g -std=c99
+LDFLAGS += -nostartfiles -T linker.ld
 
 all: kernel.img
 
-kernel.img: kernel
-	${OBJCOPY} kernel -O binary kernel.img
+kernel: kernel.c startup.o
 
-kernel: kernel.o cstartup.o cstubs.o start.o
-	${CC} ${CFLAGS} -o kernel -T rpi.x kernel.o cstartup.o cstubs.o start.o
+kernel.img: kernel
+	$(OBJCOPY) -O binary kernel kernel.img
+
+list: kernel
+	$(OBJDUMP) -S kernel
+
+qemu: kernel.img
+	@echo
+	@echo "To exit qemu, use ctrl+a,x"
+	@echo
+	@qemu-system-arm -cpu arm1176 -m 8 -M versatilepb -nographic -kernel kernel.img
 
 clean:
-	rm -f *.o kernel kernel.img
+	rm -f kernel kernel.img startup.o
