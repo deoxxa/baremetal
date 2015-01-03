@@ -6,11 +6,11 @@ OBJCOPY = $(ARCH)-objcopy
 OBJDUMP = $(ARCH)-objdump
 
 CFLAGS += -march=armv6zk -mtune=arm1176jzf-s -g -std=c99 $(OPTIMISE)
-LDFLAGS += -nostartfiles -T linker.ld
+LDFLAGS += -nostdlib -T linker.ld
 
 all: kernel.img
 
-kernel: kernel.c startup.o
+kernel: kernel.c startup.o uart.S
 
 kernel.img: kernel
 	$(OBJCOPY) -O binary kernel kernel.img
