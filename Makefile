@@ -1,10 +1,11 @@
 ARCH = arm-none-eabi
+OPTIMISE = -Os
 
 CC = $(ARCH)-gcc
 OBJCOPY = $(ARCH)-objcopy
 OBJDUMP = $(ARCH)-objdump
 
-CFLAGS += -march=armv6zk -mtune=arm1176jzf-s -g -std=c99
+CFLAGS += -march=armv6zk -mtune=arm1176jzf-s -g -std=c99 $(OPTIMISE)
 LDFLAGS += -nostartfiles -T linker.ld
 
 all: kernel.img
